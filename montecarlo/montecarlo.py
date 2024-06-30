@@ -4,10 +4,15 @@ from collections import Counter
 from itertools import combinations, permutations
 
 class Die():
+<<<<<<< HEAD
     def __init__(self,faces):
         # Takes a NumPy array of faces as an argument. Throws a TypeError if not a NumPy array.
         if not isinstance(faces, np.ndarray):
             raise TypeError("Must be a Numpy Array for Faces")
+=======
+    def self.__init__(self):
+        pass
+>>>>>>> b99bedd66c5df52880fe3d3baf68361eee7f3230
         
         # The array’s data type dtype may be strings or numbers
         if not (np.issubdtype(faces.dtype, np.number) or np.issubdtype(faces.dtype, np.str_) or np.issubdtype(faces.dtype, np.object_)):
@@ -59,6 +64,7 @@ class Die():
         return self.__die_df
                      
 class Game():
+<<<<<<< HEAD
     # Takes a single parameter, a list of already instantiated similar dice.
     def __init__(self,die):
         # Ideally this would check if the list actually contains Die objects
@@ -155,3 +161,10 @@ class Analyzer():
             index=cts.keys(),
             data=cts.values()
         ).sort_index().rename({0:"n_permutations"},axis=1)
+=======
+    def self.__init__(self):
+        pass
+class Analyzer():
+    def self.__init__(self):
+        pass
+>>>>>>> b99bedd66c5df52880fe3d3baf68361eee7f3230
