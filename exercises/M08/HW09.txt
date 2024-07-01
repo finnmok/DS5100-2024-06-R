@@ -5,105 +5,172 @@
      5	        self, name, email, fav_genre,
      6	        num_books = 0,
      7	        book_list = pd.DataFrame({'book_name':[], 'book_rating':[]})):
-     8	
-     9	        self.name = name
-    10	        self.email = email
-    11	        self.fav_genre = fav_genre
-    12	        if num_books != book_list.shape[0]:
-    13	            self.num_books = book_list.shape[0]
-    14	        else:
-    15	            self.num_books = num_books
-    16	        if book_list.shape[0] == book_list.drop_duplicates(['book_name']).shape[0]:
-    17	            self.book_list = book_list
-    18	        else:
-    19	            raise ValueError("book_list must contain unique books")
-    20	
-    21	    def add_book(self, book_name, book_rating):
-    22	        
-    23	        if self.has_read(book_name) == False:
-    24	            new_book = pd.DataFrame({
-    25	                'book_name': [book_name], 
-    26	                'book_rating': [book_rating]
-    27	            })
-    28	
-    29	            self.book_list = pd.concat([self.book_list, new_book], ignore_index=True)
-    30	            self.num_books += 1
-    31	
-    32	
-    33	    def has_read(self, book_name):
-    34	        if book_name in self.book_list['book_name'].values:
-    35	            print(f"{self.name}, This Book, '{book_name}' Already Exists in Your Book List")
-    36	            return True
-    37	        else: 
-    38	            return False
-    39	    
-    40	    def num_books_read(self):
-    41	        return self.num_books
-    42	    
-    43	    def fav_books(self):
-    44	        return self.book_list.loc[self.book_list['book_rating']>3,:]import unittest
-    45	import numpy as np
-    46	import pandas as pd
-    47	from booklover import BookLover
-    48	import booklover as bl
-    49	
-    50	class BookLoverTestSuite(unittest.TestCase):
-    51	   
-    52	   def test_1_add_book(self):
-    53	      book = BookLover("Name","Email","NA")
-    54	      book.add_book("Travels with Charley",5)
-    55	      self.assertTrue("Travels with Charley" in book.book_list['book_name'].values)
-    56	
-    57	   def test_2_add_book(self):
-    58	      book = BookLover("Dude","Email","NA")
-    59	      book.add_book("Travels with Charley",5)
-    60	      book.add_book("Travels with Charley",5)
-    61	      self.assertEqual(book.book_list[book.book_list['book_name'] == "Travels with Charley"].shape[0],1)
-    62	    
-    63	   def test_3_has_read(self):
-    64	      book = BookLover(
-    65	         "Dude","Email","NA",1,
-    66	         pd.DataFrame({'book_name':["Travels with Charley"], 'book_rating':[5]}))
-    67	      
-    68	      self.assertTrue(book.has_read("Travels with Charley"))
-    69	
-    70	   def test_4_has_read(self):
-    71	      book = BookLover(
-    72	         "Dude","Email","NA",1,
-    73	         pd.DataFrame({'book_name':["Travels with Charley"], 'book_rating':[5]}))
-    74	      
-    75	      self.assertFalse(book.has_read("Travels without Charley"))
+     8	        """
+     9	        Initializes the BookLover with the given name, email, favorite genre, number of books read, and book list.
+    10	
+    11	        INPUTS:
+    12	        name : str
+    13	            The name of the book lover.
+    14	        email : str
+    15	            The email of the book lover.
+    16	        fav_genre : str
+    17	            The favorite genre of the book lover.
+    18	        num_books : int, optional, default = 0
+    19	            The number of books the book lover has read.
+    20	        book_list : pandas.DataFrame, optional
+    21	            A DataFrame containing the names and ratings of the books read (default is an empty DataFrame).
+    22	        """
+    23	        self.name = name
+    24	        self.email = email
+    25	        self.fav_genre = fav_genre
+    26	        if num_books != book_list.shape[0]:
+    27	            self.num_books = book_list.shape[0]
+    28	        else:
+    29	            self.num_books = num_books
+    30	        if book_list.shape[0] == book_list.drop_duplicates(['book_name']).shape[0]:
+    31	            self.book_list = book_list
+    32	        else:
+    33	            raise ValueError("book_list must contain unique books")
+    34	
+    35	    def add_book(self, book_name, book_rating):
+    36	        """
+    37	        Adds a book to the book list if it hasn't been read yet.
+    38	
+    39	        INPUTS:
+    40	        book_name : str
+    41	            The name of the book to add.
+    42	        book_rating : int
+    43	            The rating of the book to add.
+    44	        """
+    45	        if self.has_read(book_name) == False:
+    46	            new_book = pd.DataFrame({
+    47	                'book_name': [book_name], 
+    48	                'book_rating': [book_rating]
+    49	            })
+    50	
+    51	            self.book_list = pd.concat([self.book_list, new_book], ignore_index=True)
+    52	            self.num_books += 1
+    53	
+    54	
+    55	    def has_read(self, book_name):
+    56	        """
+    57	        Check if book has already been read.
+    58	
+    59	        INPUT:
+    60	        book_name : str
+    61	            The name of the book to check.
+    62	
+    63	        OUTPUT:
+    64	        bool
+    65	            True if book has been read, else False.
+    66	        """
+    67	        if book_name in self.book_list['book_name'].values:
+    68	            print(f"{self.name}, This Book, '{book_name}' Already Exists in Your Book List")
+    69	            return True
+    70	        else: 
+    71	            return False
+    72	    
+    73	    def num_books_read(self):
+    74	        """
+    75	        Returns the number of books read.
     76	
-    77	   def test_5_num_books_read(self):
-    78	      book = BookLover("Dude","Email","NA")
-    79	      book.add_book("Traveled with Charley",5)
-    80	      book.add_book("Travels with Charley",5)
-    81	      book.add_book("Travels with Charley",5) #DUP
-    82	      book.add_book("Traveling with Charley",5)
-    83	      book.add_book("Travel with Charley",5)
-    84	      book.add_book("Will Travel with Charley",5)
-    85	      self.assertEqual(book.num_books,5)
+    77	        OUTPUT:
+    78	        int
+    79	            The number of books read.
+    80	        """
+    81	        return self.num_books
+    82	    
+    83	    def fav_books(self):
+    84	        """
+    85	        Returns a DataFrame of books with a rating greater than 3.
     86	
-    87	
-    88	   def test_6_fav_books(self):
-    89	      book = BookLover("Dude","Email","NA")
-    90	      book.add_book("Traveled with Charley",1)
-    91	      book.add_book("Travels with Charley",4)
-    92	      book.add_book("Travels with Charley",5) #DUP
-    93	      book.add_book("Traveling with Charley",3)
-    94	      book.add_book("Travel with Charley",2)
-    95	      book.add_book("Will Travel with Charley",5)
-    96	      self.assertTrue(all(book.fav_books()['book_rating'].values > 3))
-    97	   
-    98	if __name__ == '__main__':
-    99	    unittest.main(verbosity=3)test_1_add_book (__main__.BookLoverTestSuite.test_1_add_book) ... ok
-   100	test_2_add_book (__main__.BookLoverTestSuite.test_2_add_book) ... ok
-   101	test_3_has_read (__main__.BookLoverTestSuite.test_3_has_read) ... ok
-   102	test_4_has_read (__main__.BookLoverTestSuite.test_4_has_read) ... ok
-   103	test_5_num_books_read (__main__.BookLoverTestSuite.test_5_num_books_read) ... ok
-   104	test_6_fav_books (__main__.BookLoverTestSuite.test_6_fav_books) ... ok
-   105	
-   106	----------------------------------------------------------------------
-   107	Ran 6 tests in 0.010s
-   108	
-   109	OK
+    87	        OUTPUT:
+    88	        pandas.DataFrame
+    89	            A DataFrame with the favorite books.
+    90	        """
+    91	        return self.book_list.loc[self.book_list['book_rating']>3,:]import unittest
+    92	import numpy as np
+    93	import pandas as pd
+    94	from booklover import BookLover
+    95	import booklover as bl
+    96	
+    97	class BookLoverTestSuite(unittest.TestCase):
+    98	   
+    99	    def test_1_add_book(self):
+   100	        """
+   101	        add a book and test if it is in `book_list`.
+   102	        """
+   103	        book = BookLover("Name","Email","NA")      
+   104	        book.add_book("Travels with Charley",5)
+   105	        self.assertTrue("Travels with Charley" in book.book_list['book_name'].values)
+   106	
+   107	    def test_2_add_book(self):
+   108	        """ 
+   109	        add the same book twice. Test if it's in `book_list` only once.
+   110	        """
+   111	        book = BookLover("Dude","Email","NA")
+   112	        book.add_book("Travels with Charley",5)
+   113	        book.add_book("Travels with Charley",5)
+   114	        self.assertEqual(book.book_list[book.book_list['book_name'] == "Travels with Charley"].shape[0],1)
+   115	
+   116	    def test_3_has_read(self):
+   117	        """
+   118	        pass a book in the list and test if the answer is `True`.
+   119	        """
+   120	        book = BookLover(
+   121	         "Dude","Email","NA",1,
+   122	         pd.DataFrame({'book_name':["Travels with Charley"], 'book_rating':[5]}))
+   123	
+   124	        self.assertTrue(book.has_read("Travels with Charley"))
+   125	
+   126	    def test_4_has_read(self):
+   127	        """
+   128	        pass a book NOT in the list and use `assert False` to test the answer is `True`
+   129	        """
+   130	        book = BookLover(
+   131	         "Dude","Email","NA",1,
+   132	         pd.DataFrame({'book_name':["Travels with Charley"], 'book_rating':[5]}))
+   133	
+   134	        self.assertFalse(book.has_read("Travels without Charley"))
+   135	
+   136	    def test_5_num_books_read(self):
+   137	        """ 
+   138	        add some books to the list, and test num_books matches expected.
+   139	        """
+   140	        book = BookLover("Dude","Email","NA")
+   141	        book.add_book("Traveled with Charley",5)
+   142	        book.add_book("Travels with Charley",5)
+   143	        book.add_book("Travels with Charley",5) #DUP
+   144	        book.add_book("Traveling with Charley",5)
+   145	        book.add_book("Travel with Charley",5)
+   146	        book.add_book("Will Travel with Charley",5)
+   147	        self.assertEqual(book.num_books,5)
+   148	
+   149	
+   150	    def test_6_fav_books(self):
+   151	        """ 
+   152	        add some books with ratings to the list, making sure some of them have rating > 3. 
+   153	
+   154	        Your test should check that the returned books have rating  > 3
+   155	        """
+   156	        book = BookLover("Dude","Email","NA")
+   157	        book.add_book("Traveled with Charley",1)
+   158	        book.add_book("Travels with Charley",4)
+   159	        book.add_book("Travels with Charley",5) #DUP
+   160	        book.add_book("Traveling with Charley",3)
+   161	        book.add_book("Travel with Charley",2)
+   162	        book.add_book("Will Travel with Charley",5)
+   163	        self.assertTrue(all(book.fav_books()['book_rating'].values > 3))
+   164	
+   165	if __name__ == '__main__':
+   166	    unittest.main(verbosity=3)test_1_add_book (__main__.BookLoverTestSuite.test_1_add_book) ... ok
+   167	test_2_add_book (__main__.BookLoverTestSuite.test_2_add_book) ... ok
+   168	test_3_has_read (__main__.BookLoverTestSuite.test_3_has_read) ... ok
+   169	test_4_has_read (__main__.BookLoverTestSuite.test_4_has_read) ... ok
+   170	test_5_num_books_read (__main__.BookLoverTestSuite.test_5_num_books_read) ... ok
+   171	test_6_fav_books (__main__.BookLoverTestSuite.test_6_fav_books) ... ok
+   172	
+   173	----------------------------------------------------------------------
+   174	Ran 6 tests in 0.010s
+   175	
+   176	OK
