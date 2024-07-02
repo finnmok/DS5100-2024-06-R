@@ -4,8 +4,7 @@ from collections import Counter
 from itertools import combinations, permutations
 
 class Die():
-    """
-    A class representing a die with customizable faces and weights.
+    """A class representing a die with customizable faces and weights.
     
     INPUT:
         faces (numpy.ndarray): An array of faces for the die. Must be strings or numbers.
@@ -14,8 +13,7 @@ class Die():
         A Die object with initialized faces and equal weights.
     """
     def __init__(self,faces):
-        """
-        Initializes the die with faces and default weights.
+        """Initializes the die with faces and default weights.
         
         INPUTS:
             faces (numpy.ndarray): An array of faces for the die. Must be strings or numbers.
@@ -46,8 +44,7 @@ class Die():
         
     # Takes two arguments: the face value to be changed and the new weight.
     def set_wts(self,which_face,new_wt):
-        """
-        Sets the weight of a specified face.
+        """Sets the weight of a specified face.
         
         INPUTS:
             which_face: The face value to be changed. Face must exist in initialized faces
@@ -67,8 +64,7 @@ class Die():
         
     #Takes a parameter of how many times the die is to be rolled; defaults to 1                   
     def roll(self,n_rolls = 1):
-        """
-        Rolls the die a specified number of times.
+        """Rolls the die a specified number of times.
         
         INPUT:
             n_rolls (int): The number of times to roll the die. Defaults to 1.
@@ -86,8 +82,7 @@ class Die():
             size=n_rolls) )
     
     def get_die_wts(self):
-        """
-        Retrieves the current weights of the die faces.
+        """Retrieves the current weights of the die faces.
         
         OUTPUT:
             pandas.DataFrame: A DataFrame containing the weights of the die faces.
