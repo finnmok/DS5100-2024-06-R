@@ -100,24 +100,24 @@ class Game():
         A Game object with the initialized dice.
     """
     # Takes a single parameter, a list of already instantiated similar dice.
-    def __init__(self,die):
+    def __init__(self,dice):
         """
         Initializes the game with a list of dice.
         
         INPUT:
-            die (list): A list of already instantiated Die objects.
+            dice (list): A list of already instantiated Die objects.
         """
         # Ideally this would check if the list actually contains Die objects
-        if isinstance(die,list) != True:
+        if isinstance(dice,list) != True:
             get_die = list()
-            get_die.append(die)
-        if not all([isinstance(d,Die) for d in die]):
+            get_die.append(dice)
+        if not all([isinstance(d,Die) for d in dice]):
             raise TypeError("All Dice Must be Dice Type")
         # and that they all have the same faces, but this is not required for this project.
-        if len(die) > 1:
-            if all([all(die[i].faces == die[i+1].faces) for i in range(len(die)-1)]) == False:
+        if len(dice) > 1:
+            if all([all(dice[i].faces == dice[i+1].faces) for i in range(len(dice)-1)]) == False:
                 raise IndexError("All Dice Must Have the Same Faces")
-        self.dice = die
+        self.dice = dice
     
     # Takes an integer parameter to specify how many times the dice should be rolled.
     def play(self, n_rolls):
@@ -222,10 +222,11 @@ class Analyzer():
         """
         cts = dict(
             sum(
-                [Counter(combinations(roll,2)) for roll in self.game.get_most_recent_play().values],
+                [Counter(combinations(roll,len(self.game.dice))) for roll in self.game.get_most_recent_play().values],
                 Counter()
             )
         )
+
         # Returns a data frame of results.
         #The data frame should have an MultiIndex of distinct combinations and a column for the associated counts.
         return pd.DataFrame(
@@ -243,7 +244,7 @@ class Analyzer():
         """
         cts = dict(
             sum(
-                [Counter(permutations(roll,2)) for roll in self.game.get_most_recent_play().values],
+                [Counter(permutations(roll,len(self.game.dice))) for roll in self.game.get_most_recent_play().values],
                 Counter()
             )
         )
