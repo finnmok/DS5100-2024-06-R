@@ -20,7 +20,7 @@ Date:    7 July (revised)
 ```         
 Name: Finn Mokrzycki
 Ned ID: qcp6az
-URL of this file on GitHub:
+URL of this file on GitHub: https://github.com/finnmok/DS5100-2024-06-R/blob/main/exercises/M10/hw10.Rmd
 ```
 
 # Instructions
