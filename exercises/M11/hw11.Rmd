@@ -7,17 +7,21 @@ output: pdf_document
 
 # Metadata
 
-    Course:   DS 5100
-    Module:   11 R Programming 2
-    Topic:    HW on Tidyverse
-    Author:   R.C. Alvarado (adapted)
-    Date:     7 July 2023 (revised)
+```         
+Course:   DS 5100
+Module:   11 R Programming 2
+Topic:    HW on Tidyverse
+Author:   R.C. Alvarado (adapted)
+Date:     7 July 2023 (revised)
+```
 
 # Student Info
 
-    Name:  Finn Mokrzycki
-    Net ID: qcp6az
-    File GitHub URL: https://github.com/finnmok/DS5100-2024-06-R/blob/main/exercises/M11/hw11.Rmd
+```         
+Name:  Finn Mokrzycki
+Net ID: qcp6az
+File GitHub URL: https://github.com/finnmok/DS5100-2024-06-R/blob/main/exercises/M11/hw11.Rmd
+```
 
 # Instructions
 
@@ -67,7 +71,8 @@ Get the dataset.
 
 ```{r}
 # CODE HERE
-read.table('abalone.data.txt')
+df <- read.csv('abalone.data.txt',sep=',',header = 0)
+head(df)
 ```
 
 ## Task 1
@@ -78,6 +83,7 @@ Print the number of rows in the dataset.
 
 ```{r}
 # CODE HERE
+nrow(df)
 ```
 
 ## Task 2
@@ -89,6 +95,7 @@ rings
 
 ```{r}
 # CODE HERE
+max(df$V9)
 ```
 
 ## Task 3
@@ -103,6 +110,10 @@ gender is infant, and print the number of records.
 
 ```{r}
 # CODE HERE
+library(tidyr)
+library(dplyr)
+
+df %>% filter(V1 == "I") %>% nrow()
 ```
 
 ## Task 4
@@ -114,6 +125,7 @@ gender is infant or male, and print the number of records.
 
 ```{r}
 # CODE HERE
+df %>% filter(V1 %in% c("M","I")) %>% nrow()
 ```
 
 ## Task 5
@@ -127,6 +139,7 @@ Print the result.
 
 ```{r}
 # CODE HERE
+table(df$V1)
 ```
 
 ## Task 6
@@ -142,6 +155,7 @@ Requirements: use the `%>%` operator to chain commands, and the
 
 ```{r}
 # CODE HERE
+df %>% group_by(V1) %>% summarize(mean(V2))
 ```
 
 # Task 7
@@ -155,4 +169,5 @@ Requirements: use the `%>%` operator to chain commands.
 
 ```{r}
 # CODE HERE
+df %>% filter(V1 == "M") %>% summarize(median(V2))
 ```
