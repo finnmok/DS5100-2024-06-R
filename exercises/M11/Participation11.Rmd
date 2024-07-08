@@ -1,0 +1,161 @@
+---
+editor_options:
+  markdown:
+    wrap: 72
+output: pdf_document
+---
+
+```         
+Name:  Finn Mokrzycki
+Net ID: qcp6az
+File GitHub URL: https://github.com/finnmok/DS5100-2024-06-R/blob/main/exercises/M11/Participation11.Rmd
+```
+
+## 11.8
+
+```{r}
+library(tidyr)
+library(dplyr)
+q.8 <- scores %>% arrange(
+  school, teacher, sex, 
+  math_score, reading_score)
+```
+
+## 11.9
+
+```{r}
+q.9 <- scores %>% select(
+  name, math_score, reading_score)
+```
+
+## 11.10
+
+```{r}
+q.10 <- scores %>% select(-sex)
+```
+
+## 11.11
+
+```{r}
+q.11 <- scores %>% select(-sex, -reading_score)
+```
+
+## 11.12
+
+```{r}
+q.12 <- scores %>% select(sex, everything())
+```
+
+## 11.13
+
+```{r}
+q.13 <- scores %>% filter(
+  sex == "male",
+  school == 'south'
+)
+```
+
+## 11.14
+
+```{r}
+q.14 <- scores %>% filter(
+  math_score > mean(math_score)
+)
+```
+
+## 11.15
+
+```{r}
+q.15 <- scores %>% filter(
+  math_score >= 4,
+  reading_score >= 3
+)
+```
+
+## 11.16
+
+```{r}
+q.16 <- scores %>% filter(
+  math_score <= 3 | reading_score <= 3
+)
+```
+
+## 11.17
+
+```{r}
+q.17 <- scores %>% filter(
+  reading_score >= 2,
+  reading_score <= 4
+)
+```
+
+## 11.18
+
+```{r}
+q.18 <- scores %>% filter(
+  substr(name,1,1) == 'm'
+)
+```
+
+## 11.19
+
+```{r}
+q.19 <- scores %>% 
+  group_by(teacher) %>% 
+  filter(
+    max(math_score) == 5
+  )
+```
+
+## 11.20
+
+```{r}
+q.20 <- scores %>% 
+  group_by(sex) %>%
+  filter(mean(math_score) == 4)
+```
+
+## 11.21
+
+```{r}
+q.21 <- scores %>%
+  mutate(
+    math_score = math_score * 10,
+    reading_score = reading_score * 10
+  )
+```
+
+## 11.22
+
+```{r}
+q.22 <- scores %>% mutate(
+  math_reading_ave = (math_score + reading_score)/2
+  )
+```
+
+## 11.26
+
+```{r}
+q.26 <- scores %>% group_by(sex) %>%
+  mutate(
+    math_score_centered_by_sex = math_score - mean(math_score)) %>%
+  arrange(desc(math_score_centered_by_sex))
+```
+
+## 11.27
+
+```{r}
+q.27 <- scores %>% group_by(teacher) %>%
+  mutate(
+    math_score_centered_by_teacher = math_score - mean(math_score)
+  )
+```
+
+## 11.32
+
+```{r}
+q.32 <- scores %>% group_by(school) %>%
+  summarize(
+    min_math_score = min(math_score)
+  )
+```
