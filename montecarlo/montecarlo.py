@@ -30,16 +30,15 @@ class Die():
         if np.unique(faces).shape[0] != faces.shape[0]:
             raise ValueError("Values Must be Distinct")
         
-        self.faces = faces
-        self.n_faces = self.faces.shape[0]
+        self.__faces = faces
         
         # Internally initializes the weights to 1 for each face.
-        self.wts = np.ones(self.n_faces)
+        self.__wts = np.ones(faces.shape[0])
         
         # Saves both faces and weights in a private data frame with faces in the index.
         self.__die_df = pd.DataFrame(
-            data=self.wts,
-            index=self.faces,
+            data=self.__wts,
+            index=self.__faces,
             columns = ['wt'])
         
     # Takes two arguments: the face value to be changed and the new weight.
@@ -48,18 +47,22 @@ class Die():
         
         INPUTS:
             which_face: The face value to be changed. Face must exist in initialized faces
+                Must be same datatype as element in face array
             new_wt: The new weight for the specified face. Must be numeric or castable as numeric
         """
         # Checks to see if the face passed is valid value, i.e. if it is in the die array. If not, raises an IndexError.
-        if which_face not in self.faces:
+        if which_face not in self.__faces:
             raise IndexError("Invalid Value for Die Face")
         
         # Checks to see if the weight is a valid type, i.e. if it is numeric (integer or float) or castable as numeric. If not, raises a TypeError.
         try:
             new_wt = float(new_wt)
-        except (ValueError, TypeError):
-            raise TypeError("Updated Weight is Not a Valid Type")
+        except:
+            raise ValueError("Updated Weight is Not a Valid Type")
             
+        if new_wt < 0:
+            raise ValueError("Value Must be Non-Negative")
+        
         self.__die_df.loc[which_face,'wt'] = new_wt
         
     #Takes a parameter of how many times the die is to be rolled; defaults to 1                   
@@ -72,6 +75,9 @@ class Die():
         OUTPUT:
             list: A list of outcomes from the rolls.
         """
+        if isinstance(n_rolls,int) == False:
+            raise TypeError("n_rolls must be an integer")
+        
         #This is essentially a random sample with replacement, from the private die data frame, that applies the weights.
         
         # Returns a Python list of outcomes
@@ -87,7 +93,7 @@ class Die():
         OUTPUT:
             pandas.DataFrame: A DataFrame containing the weights of the die faces.
         """
-        return self.__die_df
+        return self.__die_df.copy()
                      
 class Game():
     """
@@ -115,7 +121,7 @@ class Game():
             raise TypeError("All Dice Must be Dice Type")
         # and that they all have the same faces, but this is not required for this project.
         if len(dice) > 1:
-            if all([all(dice[i].faces == dice[i+1].faces) for i in range(len(dice)-1)]) == False:
+            if all([all(dice[i].get_die_wts().index == dice[i+1].get_die_wts().index) for i in range(len(dice)-1)]) == False:
                 raise IndexError("All Dice Must Have the Same Faces")
         self.dice = dice
     
@@ -160,7 +166,7 @@ class Game():
             return self.__play_df.reset_index().melt(
                 id_vars='roll_number',
                 var_name='die_number',
-                value_name='face_rolled').set_index(['roll_number','die_number'])
+                value_name='face_rolled').set_index(['roll_number','die_number']).copy()
         else:
             # This method should raise a ValueError if the user passes an invalid option for narrow or wide.
             raise ValueError("Form for Play Data is Invalid")
@@ -210,7 +216,7 @@ class Analyzer():
         # Computes how many times a given face is rolled in each event. For example, if a roll of five dice has all sixes, then the counts for this roll would be 5 for the face value 6 and 0 for the other faces.
         # Returns a data frame of results.
         # The data frame has an index of the roll number, face values as columns, and count values in the cells (i.e. it is in wide format).
-        return self.game.get_most_recent_play().apply(lambda row: row.value_counts().reindex(self.game.dice[0].faces).fillna(0).astype(int), axis=1)
+        return self.game.get_most_recent_play().apply(lambda row: row.value_counts().reindex(self.game.dice[0].get_die_wts().index).fillna(0).astype(int), axis=1)
     
     #Computes the distinct combinations of faces rolled, along with their counts.
     def combination_count(self):
