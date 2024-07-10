@@ -1,0 +1,118 @@
+---
+editor_options:
+  markdown:
+    wrap: 72
+output: pdf_document
+---
+
+```         
+Name:  Finn Mokrzycki
+Net ID: qcp6az
+File GitHub URL: https://github.com/finnmok/DS5100-2024-06-R/blob/main/exercises/M12/Participation12.Rmd
+```
+
+## 12.1
+
+```{r}
+library(tidyr)
+library(dplyr)
+library(vctrs)
+library(tidyverse)
+
+
+mpg %>% ggplot()
+```
+
+## 12.2
+
+```{r}
+mpg %>% ggplot(aes(x=cyl,y=hwy)) + geom_point()
+```
+
+## 12.3
+
+```{r}
+mpg %>% ggplot(aes(x=class,y=drv)) + geom_point()
+```
+
+The plot is not useful because the values are both categorical. We can
+know which categories exist, since a dot would fall in a place where
+both categories line up, but we cannot determine the frequency of these
+categories since the dots overlap.
+
+## 12.4
+
+```{r}
+x <- seq(-6*pi,6*pi,length.out = 100)
+df <- data.frame(x = x, y = sin(x)/x)
+ggplot(df,aes(x=x,y=y)) + geom_line()
+```
+
+## 12.5
+
+```{r}
+cars %>% ggplot(aes(x=speed,y=dist)) + geom_point()
+```
+
+## 12.6
+
+```{r}
+cars %>% 
+  ggplot(aes(x=speed,y=dist,color = dist > 80)) + geom_point()
+```
+
+## 12.7
+
+```{r}
+cars %>% 
+  ggplot(aes(x=speed,y=dist,color = dist > 80)) + 
+  geom_point() + 
+  scale_color_manual(values=c("blue",'red'))
+```
+
+## 12.8
+
+```{r}
+cars %>% 
+  ggplot(aes(x=speed,y=dist)) + 
+  geom_point(aes(color = dist > 80)) + 
+  scale_color_manual(values=c("blue",'red')) + 
+  geom_smooth(method = 'lm')
+```
+
+## 12.9
+
+```{r}
+cars %>% 
+  ggplot(aes(x=speed)) +
+  geom_histogram(bins=10)
+```
+
+```{r}
+cars %>% 
+  ggplot(aes(x=dist)) +
+  geom_histogram(bins=10)
+```
+
+## 12.10
+
+```{r}
+mpg %>%
+  ggplot() +
+  geom_point(aes(x=hwy,y=cty)) +
+  facet_grid(drv ~ cyl)
+```
+
+## 12.11
+
+```{r}
+iris %>% 
+  ggplot(
+    aes(x=Sepal.Length,y=Sepal.Width,
+    color=Species, shape=Species)
+    ) +
+  geom_point() +
+  geom_density2d() +
+  ggtitle("IRIS")
+  theme_light()
+```
